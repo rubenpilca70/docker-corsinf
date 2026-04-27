@@ -1,0 +1,114 @@
+# ============================================================
+#  Variables de entorno y secretos
+# ============================================================
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+secrets/
+
+# ============================================================
+#  Configuración local sensible dentro de src/
+# ============================================================
+src/config/database.php
+src/config/local.php
+src/config/*.local.php
+src/config/*.secret.php
+
+# ============================================================
+#  Dependencias PHP
+# ============================================================
+vendor/
+composer.lock
+
+# ============================================================
+#  Dependencias Node (si usas assets)
+# ============================================================
+node_modules/
+package-lock.json
+yarn.lock
+
+# ============================================================
+#  Caché y archivos generados
+# ============================================================
+src/cache/
+src/storage/cache/
+src/storage/logs/
+src/storage/framework/cache/
+src/storage/framework/sessions/
+src/storage/framework/views/
+src/bootstrap/cache/
+
+# ============================================================
+#  Logs
+# ============================================================
+*.log
+logs/
+src/logs/
+
+# ============================================================
+#  Docker — volúmenes y datos persistentes locales
+# ============================================================
+docker/data/
+mysql_data/
+postgres_data/
+redis_data/
+
+# ============================================================
+#  Archivos compilados / build
+# ============================================================
+dist/
+build/
+public/hot
+public/storage
+*.min.js
+*.min.css
+
+# ============================================================
+#  Sistema operativo
+# ============================================================
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Linux
+*~
+
+# ============================================================
+#  IDEs y editores
+# ============================================================
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.phpunit.result.cache
+.phpunit.cache/
+
+# ============================================================
+#  PHPUnit / testing
+# ============================================================
+.phpunit.result.cache
+coverage/
+.coverage
+
+# ============================================================
+#  Archivos temporales
+# ============================================================
+*.tmp
+*.bak
+*.swp
+*.orig
