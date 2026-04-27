@@ -1,6 +1,7 @@
 # Imagen base oficial de PHP con FPM (FastCGI Process Manager)
 # FPM es necesario para que Nginx pueda delegar la ejecución de PHP
 # php:8.2-fpm usa Debian 12 (Bookworm) como sistema base
+# NOTA: sqlsrv >= 5.12 requiere PHP >= 8.3; se fija en 5.11.1 para mantener PHP 8.2
 FROM php:8.2-fpm
 
 # ── DEPENDENCIAS DEL SISTEMA ─────────────────────────────────────────────────
@@ -28,6 +29,8 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     # Cabeceras de desarrollo de unixODBC: necesarias para compilar sqlsrv y pdo_sqlsrv
     unixodbc-dev \
+    # Compilador C++ y herramientas de build: requeridos para compilar sqlsrv/pdo_sqlsrv desde PECL
+    g++ make autoconf \
     # Utilidades de compresión usadas por Composer y algunos paquetes
     zip unzip \
     \
@@ -81,11 +84,17 @@ RUN docker-php-ext-install \
 
 # ── EXTENSIONES SQL SERVER VIA PECL ─────────────────────────────────────────
 # PECL es el gestor de extensiones de PHP para librerías externas
-# sqlsrv    → API nativa de SQL Server (funciones sqlsrv_*)
+# sqlsrv     → API nativa de SQL Server (funciones sqlsrv_*)
 # pdo_sqlsrv → driver PDO para SQL Server (new PDO("sqlsrv:..."))
 # Ambas usan el driver ODBC instalado anteriormente para comunicarse con SQL Server
-RUN pecl install sqlsrv pdo_sqlsrv \
-    # Activa las extensiones en PHP (crea los archivos .ini necesarios)
+#
+# Se instalan por separado: instalarlas juntas en un solo "pecl install" puede
+# provocar conflictos de compilación con exit code 1 en BuildKit
+# Se fija la versión 5.11.1: es la última que soporta PHP 8.2
+# (sqlsrv >= 5.12.0 exige PHP >= 8.3)
+RUN pecl install sqlsrv-5.11.1 \
+    && pecl install pdo_sqlsrv-5.11.1 \
+    # Activa ambas extensiones en PHP (crea los archivos .ini necesarios en conf.d)
     && docker-php-ext-enable sqlsrv pdo_sqlsrv
 
 # ── COMPOSER ─────────────────────────────────────────────────────────────────
