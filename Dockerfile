@@ -110,8 +110,13 @@ RUN echo "opcache.enable=1"             >> /usr/local/etc/php/conf.d/opcache.ini
     && echo "opcache.validate_timestamps=1" >> /usr/local/etc/php/conf.d/opcache.ini
 
 # Directorio de trabajo dentro del contenedor
-# Debe coincidir con el volumen montado en docker-compose.yml
 WORKDIR /var/www/html
+
+# ── CÓDIGO DE LA APLICACIÓN ──────────────────────────────────────────────────
+# Copia src/ dentro de la imagen para el MODO COPY (activo por defecto)
+# Cuando docker-compose monta un volumen sobre /var/www/html este COPY queda
+# sobreescrito en tiempo de ejecución → así funciona el MODO VOLUMEN (dev)
+COPY src/ .
 
 # Puerto que PHP-FPM escucha; Nginx se conecta a este puerto internamente
 EXPOSE 9000

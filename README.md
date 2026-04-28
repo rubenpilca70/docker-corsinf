@@ -183,3 +183,11 @@ $pdo = new PDO(
 ```
 
 > Si SQL Server está en tu máquina local usa `host.docker.internal` como servidor.
+
+
+
+Para volver a modo COPY con archivos nuevos:
+
+
+# -v elimina el named volume para que Docker lo reinicie desde la imagen
+docker compose down -v && docker compose up --build -d

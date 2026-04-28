@@ -8,7 +8,17 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - ./src:/var/www/html
+      # ── MODO COPY (activo) ───────────────────────────────────────────────────
+      # Los archivos vienen del COPY del Dockerfile; Docker inicializa este
+      # named volume con el contenido de la imagen la primera vez que se crea.
+      # Para actualizar archivos: docker compose down -v && docker compose up --build
+      - app_data:/var/www/html
+
+      # ── MODO VOLUMEN — dev (comentado) ──────────────────────────────────────
+      # Descomenta esta línea (y comenta app_data arriba) para ver cambios
+      # en tiempo real sin necesidad de rebuild ni reiniciar contenedores.
+      # - ./src:/var/www/html
+
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
     depends_on:
       - php
@@ -22,13 +32,27 @@ services:
       dockerfile: Dockerfile
     container_name: myapp_php
     volumes:
-      - ./src:/var/www/html
+      # ── MODO COPY (activo) ───────────────────────────────────────────────────
+      # Mismo named volume que nginx: ambos leen exactamente los mismos archivos
+      - app_data:/var/www/html
+
+      # ── MODO VOLUMEN — dev (comentado) ──────────────────────────────────────
+      # Descomenta para desarrollo en tiempo real (cambios visibles al instante).
+      # - ./src:/var/www/html
+
       # DEV:  ./php/php.dev.ini
       # PROD: ./php/php.prod.ini
       - ./php/php.dev.ini:/usr/local/etc/php/conf.d/custom.ini:ro
+      # Pool de procesos PHP-FPM: workers, timeouts, slow log
+      - ./php/www.conf:/usr/local/etc/php-fpm.d/www.conf:ro
     networks:
       - app_network
     restart: unless-stopped
+
+# Named volume compartido entre nginx y php
+# Se inicializa automáticamente con el contenido de COPY src/ en el Dockerfile
+volumes:
+  app_data:
 
 networks:
   app_network:
