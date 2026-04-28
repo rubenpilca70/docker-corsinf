@@ -40,9 +40,9 @@ services:
       # Descomenta para desarrollo en tiempo real (cambios visibles al instante).
       # - ./src:/var/www/html
 
+      # PROD: ./php/php.prod.ini  ← activo
       # DEV:  ./php/php.dev.ini
-      # PROD: ./php/php.prod.ini
-      - ./php/php.dev.ini:/usr/local/etc/php/conf.d/custom.ini:ro
+      - ./php/php.prod.ini:/usr/local/etc/php/conf.d/custom.ini:ro
       # Pool de procesos PHP-FPM: workers, timeouts, slow log
       - ./php/www.conf:/usr/local/etc/php-fpm.d/www.conf:ro
     networks:

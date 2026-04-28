@@ -190,4 +190,6 @@ Para volver a modo COPY con archivos nuevos:
 
 
 # -v elimina el named volume para que Docker lo reinicie desde la imagen
-docker compose down -v && docker compose up --build -d
+
+docker compose down -v
+docker compose up --build -d
